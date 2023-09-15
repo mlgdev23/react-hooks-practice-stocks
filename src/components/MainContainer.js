@@ -5,7 +5,6 @@ import SearchBar from "./SearchBar"
 
 function MainContainer() {
    const [stocks, setStocks] = useState([])
-   // const [portfolio, setPortfolio] = useState([])
    const [sortBy, setSortBy] = useState("Alphabetically")
    const [filterBy, setFilterBy] = useState("All")
 
@@ -13,37 +12,35 @@ function MainContainer() {
       fetch("http://localhost:3001/stocks")
          .then(r => r.json())
          .then(stocks => {
-           const modifiedStocks = stocks.map((stock) => {
-             return {...stock, inPortfolio: false}
-           })
-           setStocks(modifiedStocks)
+            const modifiedStocks = stocks.map(stock => {
+               return { ...stock, inPortfolio: false }
+            })
+            setStocks(modifiedStocks)
          })
    }, [])
-console.log(stocks)
 
    function handleAddStockToPortfolio(addedStock) {
-      
       if (!addedStock.inPortfolio) {
-         const updatedStocks = stocks.map((stock) => {
-           if (stock.id === addedStock.id) {
-            return {...stock, inPortfolio: true}
-           } else {
-            return stock
-           }
+         const updatedStocks = stocks.map(stock => {
+            if (stock.id === addedStock.id) {
+               return { ...stock, inPortfolio: true }
+            } else {
+               return stock
+            }
          })
          setStocks(updatedStocks)
       }
    }
 
    function handleRemoveStockFromPortfolio(removedStock) {
-      const updatedStocks = stocks.map((stock) => {
+      const updatedStocks = stocks.map(stock => {
          if (stock.id === removedStock.id) {
-          return {...stock, inPortfolio: false}
+            return { ...stock, inPortfolio: false }
          } else {
-          return stock
+            return stock
          }
-       })
-       setStocks(updatedStocks)
+      })
+      setStocks(updatedStocks)
    }
 
    const sortedStocks = [...stocks].sort((stockA, stockB) => {
