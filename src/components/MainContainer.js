@@ -31,19 +31,19 @@ function MainContainer() {
    }
 
    const sortedStocks = [...stocks].sort((stockA, stockB) => {
-     if (sortBy === "Alphabetically") {
-      return stockA.name.localeCompare(stockB.name)
-     } else {
-      return stockA.price - stockB.price
-     }
+      if (sortBy === "Alphabetically") {
+         return stockA.name.localeCompare(stockB.name)
+      } else {
+         return stockA.price - stockB.price
+      }
    })
 
    const filteredStocks = sortedStocks.filter(stock => {
-    if (filterBy === "All") {
-      return true
-    } else {
-      return stock.type.toLowerCase() === filterBy.toLowerCase()
-    }
+      if (filterBy === "All") {
+         return true
+      } else {
+         return stock.type.toLowerCase() === filterBy.toLowerCase()
+      }
    })
 
    return (
