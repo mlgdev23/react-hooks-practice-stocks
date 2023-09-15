@@ -5,28 +5,45 @@ import SearchBar from "./SearchBar"
 
 function MainContainer() {
    const [stocks, setStocks] = useState([])
-   const [portfolio, setPortfolio] = useState([])
+   // const [portfolio, setPortfolio] = useState([])
    const [sortBy, setSortBy] = useState("Alphabetically")
    const [filterBy, setFilterBy] = useState("All")
 
    useEffect(() => {
       fetch("http://localhost:3001/stocks")
          .then(r => r.json())
-         .then(setStocks)
+         .then(stocks => {
+           const modifiedStocks = stocks.map((stock) => {
+             return {...stock, inPortfolio: false}
+           })
+           setStocks(modifiedStocks)
+         })
    }, [])
+console.log(stocks)
 
    function handleAddStockToPortfolio(addedStock) {
-      const foundStock = portfolio.find(stock => stock.id === addedStock.id)
-      if (!foundStock) {
-         setPortfolio([...portfolio, addedStock])
+      
+      if (!addedStock.inPortfolio) {
+         const updatedStocks = stocks.map((stock) => {
+           if (stock.id === addedStock.id) {
+            return {...stock, inPortfolio: true}
+           } else {
+            return stock
+           }
+         })
+         setStocks(updatedStocks)
       }
    }
 
    function handleRemoveStockFromPortfolio(removedStock) {
-      const filteredPorfolio = portfolio.filter(
-         stock => stock.id !== removedStock.id
-      )
-      setPortfolio(filteredPorfolio)
+      const updatedStocks = stocks.map((stock) => {
+         if (stock.id === removedStock.id) {
+          return {...stock, inPortfolio: false}
+         } else {
+          return stock
+         }
+       })
+       setStocks(updatedStocks)
    }
 
    const sortedStocks = [...stocks].sort((stockA, stockB) => {
@@ -45,6 +62,8 @@ function MainContainer() {
       }
    })
 
+   const portfolioStocks = stocks.filter(stock => stock.inPortfolio)
+
    return (
       <div>
          <SearchBar
@@ -62,7 +81,7 @@ function MainContainer() {
             </div>
             <div className="col-4">
                <PortfolioContainer
-                  portfolio={portfolio}
+                  portfolio={portfolioStocks}
                   onStockClick={handleRemoveStockFromPortfolio}
                />
             </div>
